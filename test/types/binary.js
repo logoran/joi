@@ -50,27 +50,27 @@ describe('binary', () => {
             [hello, true],
             [Buffer.from('hello'), true],
             ['goodbye', false, null, {
-                message: '"value" must be one of [hello]',
+                message: '"goodbye" must be one of [hello]',
                 details: [{
-                    message: '"value" must be one of [hello]',
+                    message: '"goodbye" must be one of [hello]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: Buffer.from('goodbye'), valids: [hello], label: 'value', key: undefined }
                 }]
             }],
             [Buffer.from('goodbye'), false, null, {
-                message: '"value" must be one of [hello]',
+                message: '"goodbye" must be one of [hello]',
                 details: [{
-                    message: '"value" must be one of [hello]',
+                    message: '"goodbye" must be one of [hello]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: Buffer.from('goodbye'), valids: [hello], label: 'value', key: undefined }
                 }]
             }],
             [Buffer.from('HELLO'), false, null, {
-                message: '"value" must be one of [hello]',
+                message: '"HELLO" must be one of [hello]',
                 details: [{
-                    message: '"value" must be one of [hello]',
+                    message: '"HELLO" must be one of [hello]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: Buffer.from('HELLO'), valids: [hello], label: 'value', key: undefined }
@@ -83,12 +83,12 @@ describe('binary', () => {
 
         it('returns an error when a non-buffer or non-string is used', async () => {
 
-            const err = await expect(Joi.binary().validate(5)).to.reject('"value" must be a buffer or a string');
+            const err = await expect(Joi.binary().validate(5)).to.reject('"5" must be a buffer or a string');
             expect(err.details).to.equal([{
-                message: '"value" must be a buffer or a string',
+                message: '"5" must be a buffer or a string',
                 path: [],
                 type: 'binary.base',
-                context: { label: 'value', key: undefined }
+                context: { label: 'value', key: undefined, value: 5 }
             }]);
         });
 
@@ -133,9 +133,9 @@ describe('binary', () => {
             Helper.validate(schema, [
                 [Buffer.from('testing'), true],
                 [Buffer.from('test'), false, null, {
-                    message: '"value" must be at least 5 bytes',
+                    message: '"test" must be at least 5 bytes',
                     details: [{
-                        message: '"value" must be at least 5 bytes',
+                        message: '"test" must be at least 5 bytes',
                         path: [],
                         type: 'binary.min',
                         context: { limit: 5, value: Buffer.from('test'), label: 'value', key: undefined }
@@ -168,9 +168,9 @@ describe('binary', () => {
             const schema = Joi.binary().max(5);
             Helper.validate(schema, [
                 [Buffer.from('testing'), false, null, {
-                    message: '"value" must be less than or equal to 5 bytes',
+                    message: '"testing" must be less than or equal to 5 bytes',
                     details: [{
-                        message: '"value" must be less than or equal to 5 bytes',
+                        message: '"testing" must be less than or equal to 5 bytes',
                         path: [],
                         type: 'binary.max',
                         context: {
@@ -210,9 +210,9 @@ describe('binary', () => {
             Helper.validate(schema, [
                 [Buffer.from('test'), true],
                 [Buffer.from('testing'), false, null, {
-                    message: '"value" must be 4 bytes',
+                    message: '"testing" must be 4 bytes',
                     details: [{
-                        message: '"value" must be 4 bytes',
+                        message: '"testing" must be 4 bytes',
                         path: [],
                         type: 'binary.length',
                         context: {
