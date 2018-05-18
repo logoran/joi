@@ -64,9 +64,9 @@ describe('Joi', () => {
             ['a', true],
             ['b', true],
             [5, false, null, {
-                message: '"value" must be a string',
+                message: '"5" must be a string',
                 details: [{
-                    message: '"value" must be a string',
+                    message: '"5" must be a string',
                     path: [],
                     type: 'string.base',
                     context: { value: 5, label: 'value', key: undefined }
@@ -76,9 +76,9 @@ describe('Joi', () => {
 
         Helper.validate(b, [
             ['a', false, null, {
-                message: '"value" must be one of [b]',
+                message: '"a" must be one of [b]',
                 details: [{
-                    message: '"value" must be one of [b]',
+                    message: '"a" must be one of [b]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: 'a', valids: ['b'], label: 'value', key: undefined }
@@ -86,9 +86,9 @@ describe('Joi', () => {
             }],
             ['b', true],
             [5, false, null, {
-                message: '"value" must be a string',
+                message: '"5" must be a string',
                 details: [{
-                    message: '"value" must be a string',
+                    message: '"5" must be a string',
                     path: [],
                     type: 'string.base',
                     context: { value: 5, label: 'value', key: undefined }
@@ -100,23 +100,23 @@ describe('Joi', () => {
     it('validates null', async () => {
 
         const err = await expect(Joi.string().validate(null)).to.reject();
-        expect(err).to.be.an.error('"value" must be a string');
+        expect(err).to.be.an.error('"null" must be a string');
         expect(err.details).to.equal([{
-            message: '"value" must be a string',
+            message: '"null" must be a string',
             path: [],
             type: 'string.base',
             context: { value: null, label: 'value', key: undefined }
         }]);
-        expect(err.annotate()).to.equal('{\n  \u001b[41m\"value\"\u001b[0m\u001b[31m [1]: -- missing --\u001b[0m\n}\n\u001b[31m\n[1] "value" must be a string\u001b[0m');
+        expect(err.annotate()).to.equal('{\n  \u001b[41m\"value\"\u001b[0m\u001b[31m [1]: -- missing --\u001b[0m\n}\n\u001b[31m\n[1] "null" must be a string\u001b[0m');
     });
 
     it('validates null schema', () => {
 
         Helper.validate(null, [
             ['a', false, null, {
-                message: '"value" must be one of [null]',
+                message: '"a" must be one of [null]',
                 details: [{
-                    message: '"value" must be one of [null]',
+                    message: '"a" must be one of [null]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: 'a', valids: [null], label: 'value', key: undefined }
@@ -130,9 +130,9 @@ describe('Joi', () => {
 
         Helper.validate(5, [
             [6, false, null, {
-                message: '"value" must be one of [5]',
+                message: '"6" must be one of [5]',
                 details: [{
-                    message: '"value" must be one of [5]',
+                    message: '"6" must be one of [5]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: 6, valids: [5], label: 'value', key: undefined }
@@ -146,9 +146,9 @@ describe('Joi', () => {
 
         Helper.validate('5', [
             ['6', false, null, {
-                message: '"value" must be one of [5]',
+                message: '"6" must be one of [5]',
                 details: [{
-                    message: '"value" must be one of [5]',
+                    message: '"6" must be one of [5]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: '6', valids: ['5'], label: 'value', key: undefined }
@@ -162,9 +162,9 @@ describe('Joi', () => {
 
         Helper.validate(true, [
             [false, false, null, {
-                message: '"value" must be one of [true]',
+                message: '"false" must be one of [true]',
                 details: [{
-                    message: '"value" must be one of [true]',
+                    message: '"false" must be one of [true]',
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: false, valids: [true], label: 'value', key: undefined }
@@ -182,9 +182,9 @@ describe('Joi', () => {
             [new Date(now), true],
             [now, true],
             [now * 2, false, null, {
-                message: `"value" must be one of [${dnow}]`,
+                message: `"${new Date(now * 2)}" must be one of [${dnow}]`,
                 details: [{
-                    message: `"value" must be one of [${dnow}]`,
+                    message: `"${new Date(now * 2)}" must be one of [${dnow}]`,
                     path: [],
                     type: 'any.allowOnly',
                     context: { value: new Date(now * 2), valids: [dnow], label: 'value', key: undefined }
@@ -200,65 +200,65 @@ describe('Joi', () => {
             ['key', true],
             [5, true],
             ['other', false, null, {
-                message: '"value" must be one of [key], "value" must be a number, "value" must be an object',
+                message: '"other" must be one of [key], "other" must be a number, "other" must be an object',
                 details: [
                     {
-                        message: '"value" must be one of [key]',
+                        message: '"other" must be one of [key]',
                         path: [],
                         type: 'any.allowOnly',
                         context: { value: 'other', valids: ['key'], label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be a number',
+                        message: '"other" must be a number',
                         path: [],
                         type: 'number.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: 'other' }
                     },
                     {
-                        message: '"value" must be an object',
+                        message: '"other" must be an object',
                         path: [],
                         type: 'object.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: 'other' }
                     }
                 ]
             }],
             [6, false, null, {
-                message: '"value" must be a string, "value" must be one of [5], "value" must be an object',
+                message: '"6" must be a string, "6" must be one of [5], "6" must be an object',
                 details: [
                     {
-                        message: '"value" must be a string',
+                        message: '"6" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: 6, label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be one of [5]',
+                        message: '"6" must be one of [5]',
                         path: [],
                         type: 'any.allowOnly',
                         context: { value: 6, valids: [5], label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be an object',
+                        message: '"6" must be an object',
                         path: [],
                         type: 'object.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: 6 }
                     }
                 ]
             }],
             [{ c: 5 }, false, null, {
-                message: '"value" must be a string, "value" must be a number, "c" is not allowed',
+                message: '"[object Object]" must be a string, "[object Object]" must be a number, "c" is not allowed',
                 details: [
                     {
-                        message: '"value" must be a string',
+                        message: '"[object Object]" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: { c: 5 }, label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be a number',
+                        message: '"[object Object]" must be a number',
                         path: [],
                         type: 'number.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: { c: 5 } }
                     },
                     {
                         message: '"c" is not allowed',
@@ -272,25 +272,25 @@ describe('Joi', () => {
             [{ b: 'abc' }, true],
             [{ a: true, b: 'boom' }, true],
             [{ a: 5, b: 'a' }, false, null, {
-                message: '"value" must be a string, "value" must be a number, child "a" fails because ["a" must be a boolean]',
+                message: '"[object Object]" must be a string, "[object Object]" must be a number, child "a" fails because ["a" must be a boolean]',
                 details: [
                     {
-                        message: '"value" must be a string',
+                        message: '"[object Object]" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: { a: 5, b: 'a' }, label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be a number',
+                        message: '"[object Object]" must be a number',
                         path: [],
                         type: 'number.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: { a: 5, b: 'a' } }
                     },
                     {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: 5 }
                     }
                 ]
             }]
@@ -304,65 +304,65 @@ describe('Joi', () => {
             ['key', true],
             [5, true],
             ['other', false, null, {
-                message: '"value" must be one of [key], "value" must be a number, "value" must be an object',
+                message: '"other" must be one of [key], "other" must be a number, "other" must be an object',
                 details: [
                     {
-                        message: '"value" must be one of [key]',
+                        message: '"other" must be one of [key]',
                         path: [],
                         type: 'any.allowOnly',
                         context: { value: 'other', valids: ['key'], label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be a number',
+                        message: '"other" must be a number',
                         path: [],
                         type: 'number.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: 'other' }
                     },
                     {
-                        message: '"value" must be an object',
+                        message: '"other" must be an object',
                         path: [],
                         type: 'object.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: 'other' }
                     }
                 ]
             }],
             [6, false, null, {
-                message: '"value" must be a string, "value" must be one of [5], "value" must be an object',
+                message: '"6" must be a string, "6" must be one of [5], "6" must be an object',
                 details: [
                     {
-                        message: '"value" must be a string',
+                        message: '"6" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: 6, label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be one of [5]',
+                        message: '"6" must be one of [5]',
                         path: [],
                         type: 'any.allowOnly',
                         context: { value: 6, valids: [5], label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be an object',
+                        message: '"6" must be an object',
                         path: [],
                         type: 'object.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: 6 }
                     }
                 ]
             }],
             [{ c: 5 }, false, null, {
-                message: '"value" must be a string, "value" must be a number, "c" is not allowed',
+                message: '"[object Object]" must be a string, "[object Object]" must be a number, "c" is not allowed',
                 details: [
                     {
-                        message: '"value" must be a string',
+                        message: '"[object Object]" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: { c: 5 }, label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be a number',
+                        message: '"[object Object]" must be a number',
                         path: [],
                         type: 'number.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: { c: 5 } }
                     },
                     {
                         message: '"c" is not allowed',
@@ -376,25 +376,25 @@ describe('Joi', () => {
             [{ b: 'abc' }, true],
             [{ a: true, b: 'boom' }, true],
             [{ a: 5, b: 'a' }, false, null, {
-                message: '"value" must be a string, "value" must be a number, child "a" fails because ["a" must be a boolean]',
+                message: '"[object Object]" must be a string, "[object Object]" must be a number, child "a" fails because ["a" must be a boolean]',
                 details: [
                     {
-                        message: '"value" must be a string',
+                        message: '"[object Object]" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: { a: 5, b: 'a' }, label: 'value', key: undefined }
                     },
                     {
-                        message: '"value" must be a number',
+                        message: '"[object Object]" must be a number',
                         path: [],
                         type: 'number.base',
-                        context: { label: 'value', key: undefined }
+                        context: { label: 'value', key: undefined, value: { a: 5, b: 'a' } }
                     },
                     {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: 5 }
                     }
                 ]
             }]
@@ -476,7 +476,7 @@ describe('Joi', () => {
                     message: '"upc" is not allowed to be empty',
                     path: ['upc'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'upc', key: 'upc' }
+                    context: { invalids: [''], label: 'upc', key: 'upc' }
                 }]
             }],
             [{ txt: 'test', upc: undefined }, false, null, {
@@ -540,7 +540,7 @@ describe('Joi', () => {
                     message: '"upc" is not allowed to be empty',
                     path: ['upc'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'upc', key: 'upc' }
+                    context: { invalids: [''], label: 'upc', key: 'upc' }
                 }]
             }],
             [{ txt: 'test', upc: undefined }, true],
@@ -620,7 +620,7 @@ describe('Joi', () => {
                     message: '"upc" is not allowed to be empty',
                     path: ['upc'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'upc', key: 'upc' }
+                    context: { invalids: [''], label: 'upc', key: 'upc' }
                 }]
             }],
             [{ txt: '', upc: 'test' }, false, null, {
@@ -629,7 +629,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: null, upc: 'test' }, false, null, {
@@ -649,7 +649,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: '', upc: '' }, false, null, {
@@ -658,7 +658,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: 'test', upc: 'test' }, false, null, {
@@ -830,7 +830,7 @@ describe('Joi', () => {
                     message: '"code" must be a number',
                     path: ['code'],
                     type: 'number.base',
-                    context: { label: 'code', key: 'code' }
+                    context: { label: 'code', key: 'code', value: null }
                 }]
             }],
             [{ code: 123 }, true],
@@ -842,7 +842,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: null, upc: 'test' }, false, null, {
@@ -864,7 +864,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: '', upc: undefined, code: 999 }, false, null, {
@@ -873,7 +873,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: '', upc: undefined, code: undefined }, false, null, {
@@ -882,7 +882,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: '', upc: '' }, false, null, {
@@ -891,7 +891,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: 'test', upc: 'test' }, true],
@@ -988,7 +988,7 @@ describe('Joi', () => {
                     message: '"code" must be a number',
                     path: ['code'],
                     type: 'number.base',
-                    context: { label: 'code', key: 'code' }
+                    context: { label: 'code', key: 'code', value: null }
                 }]
             }],
             [{ code: 123 }, false, null, {
@@ -1045,7 +1045,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: null, upc: 'test' }, false, null, {
@@ -1127,7 +1127,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: '', upc: undefined, code: 999 }, false, null, {
@@ -1136,7 +1136,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: '', upc: undefined, code: undefined }, false, null, {
@@ -1145,7 +1145,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: '', upc: '' }, false, null, {
@@ -1154,7 +1154,7 @@ describe('Joi', () => {
                     message: '"txt" is not allowed to be empty',
                     path: ['txt'],
                     type: 'any.empty',
-                    context: { value: '', invalids: [''], label: 'txt', key: 'txt' }
+                    context: { invalids: [''], label: 'txt', key: 'txt' }
                 }]
             }],
             [{ txt: 'test', upc: 'test' }, false, null, {
@@ -1282,7 +1282,7 @@ describe('Joi', () => {
                 message: '"auth" must be a boolean',
                 path: ['auth'],
                 type: 'boolean.base',
-                context: { label: 'auth', key: 'auth' }
+                context: { label: 'auth', key: 'auth', value: { mode: 'none' } }
             }
         ]);
 
@@ -1316,7 +1316,7 @@ describe('Joi', () => {
                         message: '"auth" must be a boolean',
                         path: ['auth'],
                         type: 'boolean.base',
-                        context: { label: 'auth', key: 'auth' }
+                        context: { label: 'auth', key: 'auth', value: { something: undefined } }
                     }
                 ]
             }],
@@ -1331,7 +1331,7 @@ describe('Joi', () => {
                         message: '"auth" must be an object',
                         path: ['auth'],
                         type: 'object.base',
-                        context: { label: 'auth', key: 'auth' }
+                        context: { label: 'auth', key: 'auth', value: 123 }
                     },
                     {
                         message: '"auth" must be a string',
@@ -1343,7 +1343,7 @@ describe('Joi', () => {
                         message: '"auth" must be a boolean',
                         path: ['auth'],
                         type: 'boolean.base',
-                        context: { label: 'auth', key: 'auth' }
+                        context: { label: 'auth', key: 'auth', value: 123 }
                     }
                 ]
             }]
@@ -1381,7 +1381,7 @@ describe('Joi', () => {
                 message: '"auth" must be a boolean',
                 path: ['auth'],
                 type: 'boolean.base',
-                context: { label: 'auth', key: 'auth' }
+                context: { label: 'auth', key: 'auth', value: { mode: 'none' } }
             }
         ]);
 
@@ -1415,7 +1415,7 @@ describe('Joi', () => {
                         message: '"auth" must be a boolean',
                         path: ['auth'],
                         type: 'boolean.base',
-                        context: { label: 'auth', key: 'auth' }
+                        context: { label: 'auth', key: 'auth', value: { something: undefined } }
                     }
                 ]
             }],
@@ -1430,7 +1430,7 @@ describe('Joi', () => {
                         message: '"auth" must be an object',
                         path: ['auth'],
                         type: 'object.base',
-                        context: { label: 'auth', key: 'auth' }
+                        context: { label: 'auth', key: 'auth', value: 123 }
                     },
                     {
                         message: '"auth" must be a string',
@@ -1442,7 +1442,7 @@ describe('Joi', () => {
                         message: '"auth" must be a boolean',
                         path: ['auth'],
                         type: 'boolean.base',
-                        context: { label: 'auth', key: 'auth' }
+                        context: { label: 'auth', key: 'auth', value: 123 }
                     }
                 ]
             }]
@@ -1472,7 +1472,7 @@ describe('Joi', () => {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: null }
                     }
                 ]
             }],
@@ -1493,7 +1493,7 @@ describe('Joi', () => {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: 123 }
                     }
                 ]
             }],
@@ -1510,7 +1510,7 @@ describe('Joi', () => {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: { c: 1 } }
                     }
                 ]
             }],
@@ -1549,7 +1549,7 @@ describe('Joi', () => {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: null }
                     }
                 ]
             }],
@@ -1570,7 +1570,7 @@ describe('Joi', () => {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: 123 }
                     }
                 ]
             }],
@@ -1587,7 +1587,7 @@ describe('Joi', () => {
                         message: '"a" must be a boolean',
                         path: ['a'],
                         type: 'boolean.base',
-                        context: { label: 'a', key: 'a' }
+                        context: { label: 'a', key: 'a', value: { c: 1 } }
                     }
                 ]
             }],
@@ -1666,18 +1666,18 @@ describe('Joi', () => {
 
         Helper.validate(schema, [
             [5, false, null, {
-                message: '"value" contains an invalid value',
+                message: '"5" is an invalid value',
                 details: [{
-                    message: '"value" contains an invalid value',
+                    message: '"5" is an invalid value',
                     path: [],
                     type: 'any.invalid',
                     context: { value: 5, invalids: [Infinity, -Infinity, 5], label: 'value', key: undefined }
                 }]
             }],
             ['5', false, null, {
-                message: '"value" contains an invalid value',
+                message: '"5" is an invalid value',
                 details: [{
-                    message: '"value" contains an invalid value',
+                    message: '"5" is an invalid value',
                     path: [],
                     type: 'any.invalid',
                     context: { value: 5, invalids: [Infinity, -Infinity, 5], label: 'value', key: undefined }
@@ -1700,8 +1700,8 @@ describe('Joi', () => {
 
         await Joi.boolean().allow(null).validate(true);
         await Joi.object().validate({ auth: { mode: 'try' } });
-        await expect(Joi.object().validate(true)).to.reject('"value" must be an object');
-        await expect(Joi.string().validate(true)).to.reject('"value" must be a string');
+        await expect(Joi.object().validate(true)).to.reject('"true" must be an object');
+        await expect(Joi.string().validate(true)).to.reject('"true" must be a string');
         await Joi.string().email().validate('test@test.com');
         await Joi.object({ param: Joi.string().required() }).validate({ param: 'item' });
     });
@@ -2638,7 +2638,7 @@ describe('Joi', () => {
             expect(() => {
 
                 Joi.attempt('x', Joi.number());
-            }).to.throw('"value" must be a number');
+            }).to.throw('"x" must be a number');
         });
 
         it('does not throw on valid value', () => {
@@ -2664,7 +2664,7 @@ describe('Joi', () => {
             expect(() => {
 
                 Joi.attempt('x', Joi.number(), 'the reason is');
-            }).to.throw('the reason is "value" must be a number');
+            }).to.throw('the reason is "x" must be a number');
         });
 
         it('throws on invalid value with message as error', () => {
@@ -2976,18 +2976,18 @@ describe('Joi', () => {
             const schema = customJoi.myType();
             Helper.validate(schema, [
                 [123, false, null, {
-                    message: '"value" must be a string',
+                    message: '"123" must be a string',
                     details: [{
-                        message: '"value" must be a string',
+                        message: '"123" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: 123, label: 'value', key: undefined }
                     }]
                 }],
                 ['a', false, null, {
-                    message: '"value" length must be at least 2 characters long',
+                    message: '"a" length must be at least 2 characters long',
                     details: [{
-                        message: '"value" length must be at least 2 characters long',
+                        message: '"a" length must be at least 2 characters long',
                         path: [],
                         type: 'string.min',
                         context: {
@@ -3429,7 +3429,7 @@ describe('Joi', () => {
                 base: Joi.string(),
                 coerce(value, state, options) {
 
-                    return this.createError('any.invalid', null, state, options);
+                    return this.createError('any.invalid', { value }, state, options);
                 },
                 name: 'myType'
             });
@@ -3446,7 +3446,7 @@ describe('Joi', () => {
 
             const schema = customJoi2.myType();
             const result = schema.validate('');
-            expect(result.error).to.an.error('"value" contains an invalid value');
+            expect(result.error).to.an.error('"" is an invalid value');
         });
 
         it('defines a custom type casting its input value', () => {
@@ -3493,7 +3493,7 @@ describe('Joi', () => {
             const customJoi = Joi.extend({
                 coerce(value, state, options) {
 
-                    return this.createError('any.invalid', null, state, options);
+                    return this.createError('any.invalid', { value }, state, options);
                 },
                 name: 'myType'
             });
@@ -3501,7 +3501,7 @@ describe('Joi', () => {
             const schema = customJoi.myType();
             const result = schema.validate('foo');
             expect(result.error).to.exist();
-            expect(result.error.toString()).to.equal('ValidationError: "value" contains an invalid value');
+            expect(result.error.toString()).to.equal('ValidationError: "foo" is an invalid value');
         });
 
         it('defines a custom type with a failing pre', () => {
@@ -3509,7 +3509,7 @@ describe('Joi', () => {
             const customJoi = Joi.extend({
                 pre(value, state, options) {
 
-                    return this.createError('any.invalid', null, state, options);
+                    return this.createError('any.invalid', { value }, state, options);
                 },
                 name: 'myType'
             });
@@ -3517,7 +3517,7 @@ describe('Joi', () => {
             const schema = customJoi.myType();
             const result = schema.validate('foo');
             expect(result.error).to.exist();
-            expect(result.error.toString()).to.equal('ValidationError: "value" contains an invalid value');
+            expect(result.error.toString()).to.equal('ValidationError: "foo" is an invalid value');
         });
 
         it('defines a custom type with a non-modifying coerce', () => {
@@ -3566,7 +3566,7 @@ describe('Joi', () => {
             const schema = customJoi.myType();
             const result = schema.validate('foo');
             expect(result.error).to.exist();
-            expect(result.error.toString()).to.equal('ValidationError: "value" must be a number');
+            expect(result.error.toString()).to.equal('ValidationError: "foo" must be a number');
         });
 
         describe('describe()', () => {
@@ -4131,9 +4131,9 @@ describe('Joi', () => {
                 throw new Error('Should not go here');
             }, (err) => {
 
-                expect(err).to.be.an.error('"value" must be a string');
+                expect(err).to.be.an.error('"0" must be a string');
                 expect(err.details).to.equal([{
-                    message: '"value" must be a string',
+                    message: '"0" must be a string',
                     path: [],
                     type: 'string.base',
                     context: { value: 0, key: undefined, label: 'value' }
@@ -4154,9 +4154,9 @@ describe('Joi', () => {
                 })
                 .catch((err) => {
 
-                    expect(err).to.be.an.error('"value" must be a string');
+                    expect(err).to.be.an.error('"0" must be a string');
                     expect(err.details).to.equal([{
-                        message: '"value" must be a string',
+                        message: '"0" must be a string',
                         path: [],
                         type: 'string.base',
                         context: { value: 0, key: undefined, label: 'value' }
@@ -4172,9 +4172,9 @@ describe('Joi', () => {
 
             return promise.catch((err) => {
 
-                expect(err).to.be.an.error('"value" must be a string');
+                expect(err).to.be.an.error('"0" must be a string');
                 expect(err.details).to.equal([{
-                    message: '"value" must be a string',
+                    message: '"0" must be a string',
                     path: [],
                     type: 'string.base',
                     context: { value: 0, key: undefined, label: 'value' }

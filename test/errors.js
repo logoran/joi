@@ -93,7 +93,7 @@ describe('errors', () => {
                 message: '"date" 18',
                 path: ['date'],
                 type: 'date.base',
-                context: { label: 'date', key: 'date' }
+                context: { label: 'date', key: 'date', value: 'invalid-date' }
             },
             {
                 message: '"alphanum" 16',
@@ -129,7 +129,7 @@ describe('errors', () => {
                 message: '"notEmpty" 3',
                 path: ['notEmpty'],
                 type: 'any.empty',
-                context: { value: '', invalids: [''], label: 'notEmpty', key: 'notEmpty' }
+                context: { invalids: [''], label: 'notEmpty', key: 'notEmpty' }
             },
             {
                 message: '"required" 7',
@@ -177,9 +177,9 @@ describe('errors', () => {
 
         const schema = Joi.valid('sad').options({ language: { key: '' } });
         const err = await expect(schema.validate(5)).to.reject();
-        expect(err).to.be.an.error('must be one of [sad]');
+        expect(err).to.be.an.error('"5" must be one of [sad]');
         expect(err.details).to.equal([{
-            message: 'must be one of [sad]',
+            message: '"5" must be one of [sad]',
             path: [],
             type: 'any.allowOnly',
             context: { value: 5, valids: ['sad'], label: 'value', key: undefined }
@@ -198,7 +198,7 @@ describe('errors', () => {
             message: '"a&#x28;&#x29;" must be a number',
             path: ['a()'],
             type: 'number.base',
-            context: { label: 'a()', key: 'a()' }
+            context: { label: 'a()', key: 'a()', value: 'x' }
         }]);
 
         const err2 = await expect(Joi.validate({ 'b()': 'x' }, schema, { escapeHtml: true })).to.reject();
@@ -223,7 +223,7 @@ describe('errors', () => {
             message: '"a()" must be a number',
             path: ['a()'],
             type: 'number.base',
-            context: { label: 'a()', key: 'a()' }
+            context: { label: 'a()', key: 'a()', value: 'x' }
         }]);
 
         const err2 = await expect(Joi.validate({ 'b()': 'x' }, schema)).to.reject();
@@ -257,7 +257,7 @@ describe('errors', () => {
                 message: '"notNumber" must be a number',
                 path: ['notNumber'],
                 type: 'number.base',
-                context: { label: 'notNumber', key: 'notNumber' }
+                context: { label: 'notNumber', key: 'notNumber', value: '' }
             },
             {
                 message: '"notString" must be a string',
@@ -269,7 +269,7 @@ describe('errors', () => {
                 message: '"notBoolean" must be a boolean',
                 path: ['notBoolean'],
                 type: 'boolean.base',
-                context: { label: 'notBoolean', key: 'notBoolean' }
+                context: { label: 'notBoolean', key: 'notBoolean', value: 9 }
             }
         ]);
     });
@@ -288,7 +288,7 @@ describe('errors', () => {
             message: '"x" must be a number',
             path: [1, 1, 'x'],
             type: 'number.base',
-            context: { label: 'x', key: 'x' }
+            context: { label: 'x', key: 'x', value: 'a' }
         }]);
     });
 
@@ -326,7 +326,7 @@ describe('errors', () => {
             message: '"x" must be a number',
             path: ['x', 1, 'x'],
             type: 'number.base',
-            context: { label: 'x', key: 'x' }
+            context: { label: 'x', key: 'x', value: 'a' }
         }]);
     });
 
@@ -334,25 +334,38 @@ describe('errors', () => {
 
         const schema = Joi.string().options({ language: { root: 'blah' } });
         const err = await expect(schema.validate(4)).to.reject();
-        expect(err).to.be.an.error('"blah" must be a string');
+        expect(err).to.be.an.error('"4" must be a string');
         expect(err.details).to.equal([{
-            message: '"blah" must be a string',
+            message: '"4" must be a string',
             path: [],
             type: 'string.base',
             context: { value: 4, label: 'blah', key: undefined }
         }]);
     });
 
-    it('overrides label key language', async () => {
+    it('overrides label key language with value', async () => {
 
         const schema = Joi.string().options({ language: { key: 'my own {{!label}} ' } });
         const err = await expect(schema.validate(4)).to.reject();
-        expect(err).to.be.an.error('my own value must be a string');
+        expect(err).to.be.an.error('"4" must be a string');
         expect(err.details).to.equal([{
-            message: 'my own value must be a string',
+            message: '"4" must be a string',
             path: [],
             type: 'string.base',
             context: { value: 4, label: 'value', key: undefined }
+        }]);
+    });
+
+    it('overrides label key language without value', async () => {
+
+        const schema = Joi.string().required().options({ language: { key: 'my own {{!label}} ' } });
+        const err = await expect(schema.validate()).to.reject();
+        expect(err).to.be.an.error('my own value is required');
+        expect(err.details).to.equal([{
+            message: 'my own value is required',
+            path: [],
+            type: 'any.required',
+            context: { label: 'value', key: undefined }
         }]);
     });
 
@@ -365,7 +378,7 @@ describe('errors', () => {
             message: '"0" must be a boolean',
             path: [0],
             type: 'boolean.base',
-            context: { label: 0, key: 0 }
+            context: { label: 0, key: 0, value: 4 }
         }]);
     });
 
@@ -593,7 +606,7 @@ describe('errors', () => {
                 message: '"0" must be a number',
                 path: ['a', 0],
                 type: 'number.base',
-                context: { label: 0, key: 0 }
+                context: { label: 0, key: 0, value: { b: 2 } }
             }]);
             expect(err.annotate()).to.equal('{\n  \"a\": [\n    { \u001b[31m[1]\u001b[0m\n      \"b\": 2\n    }\n  ]\n}\n\u001b[31m\n[1] \"0\" must be a number\u001b[0m');
         });
@@ -688,13 +701,13 @@ describe('errors', () => {
                     message: '"x" must be a number',
                     path: ['x'],
                     type: 'number.base',
-                    context: { label: 'x', key: 'x' }
+                    context: { label: 'x', key: 'x', value: true }
                 },
                 {
                     message: '"x" must be a number of milliseconds or valid date string',
                     path: ['x'],
                     type: 'date.base',
-                    context: { label: 'x', key: 'x' }
+                    context: { label: 'x', key: 'x', value: true }
                 }
             ]);
             expect(err.annotate()).to.equal('{\n  \"x\" \u001b[31m[1, 2, 3]\u001b[0m: true\n}\n\u001b[31m\n[1] "x" must be a string\n[2] "x" must be a number\n[3] "x" must be a number of milliseconds or valid date string\u001b[0m');
@@ -743,7 +756,7 @@ describe('errors', () => {
                 message: '"z" must be a number',
                 path: ['x', 'y', 'z'],
                 type: 'number.base',
-                context: { label: 'z', key: 'z' }
+                context: { label: 'z', key: 'z', value: { z: input.x.y } }
             }]);
             expect(err.annotate()).to.equal('{\n  \"x\": {\n    \"y\": {\n      \"z\" \u001b[31m[1]\u001b[0m: \"[Circular ~.x.y]\"\n    }\n  }\n}\n\u001b[31m\n[1] \"z\" must be a number\u001b[0m');
         });
@@ -811,7 +824,7 @@ describe('errors', () => {
                 message: '"y" must be a number of milliseconds or valid date string',
                 path: ['x', 'y'],
                 type: 'date.base',
-                context: { label: 'y', key: 'y' }
+                context: { label: 'y', key: 'y', value: NaN }
             }]);
             expect(err.annotate()).to.equal('{\n  \"x\": {\n    \"z\": Infinity,\n    \"u\": -Infinity,\n    \"g\": Symbol(foo),\n    \"h\": -Infinity,\n    \"i\": Infinity,\n    \"k\": (a) => a,\n    \"p\": Symbol(bar),\n    \"f\": function (x) {\\n\\n                        return [{ y: 2 }];\\n                    },\n    \"y\" \u001b[31m[1]\u001b[0m: NaN\n  }\n}\n\u001b[31m\n[1] \"y\" must be a number of milliseconds or valid date string\u001b[0m');
         });
